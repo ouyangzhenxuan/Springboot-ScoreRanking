@@ -5,10 +5,16 @@ import com.ouyang.scorerank.dataobject.RankDO;
 import com.ouyang.scorerank.error.BusinessException;
 import com.ouyang.scorerank.service.model.RankModel;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,8 +83,35 @@ public class RankServiceImpl implements RankService {
     }
 
     @Override
-    public void createScore(String name, Integer score) throws BusinessException {
+    @Transactional
+    public RankModel createScore(String name, Integer score) throws BusinessException, ParseException {
+        RankModel rankModel = new RankModel();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-mm-DD HH:mm:ss");
+        Date date = simpleDateFormat.parse(simpleDateFormat.format(new Date()));
 
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY-mm-DD HH:mm:ss");
+        DateTime today = dateTimeFormatter.parseDateTime(simpleDateFormat.format(new Date()));
+
+        rankModel.setName(name);
+        rankModel.setScore(score);
+        rankModel.setScoreDate(today);
+
+        RankDO rankDO = this.convertFromRankModel(rankModel);
+        // insert into database
+        rankDOMapper.insertSelective(rankDO);
+
+        return rankModel;
+
+    }
+
+    private RankDO convertFromRankModel(RankModel rankModel){
+        if(rankModel == null){
+            return null;
+        }
+        RankDO rankDO = new RankDO();
+        BeanUtils.copyProperties(rankModel, rankDO);
+        return rankDO;
     }
 
     private RankModel convertFromDataObject(RankDO rankDO) {

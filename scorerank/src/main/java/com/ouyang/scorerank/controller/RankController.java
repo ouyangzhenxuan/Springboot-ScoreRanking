@@ -1,6 +1,7 @@
 package com.ouyang.scorerank.controller;
 
 import com.ouyang.scorerank.controller.viewobject.RankVO;
+import com.ouyang.scorerank.error.BusinessException;
 import com.ouyang.scorerank.response.CommonReturnType;
 import com.ouyang.scorerank.service.RankService;
 import com.ouyang.scorerank.service.model.RankModel;
@@ -8,11 +9,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +44,16 @@ public class RankController extends BaseController {
             return rankVO;
         }).collect(Collectors.toList());
         return CommonReturnType.create(rankVOList);
+    }
+
+    @RequestMapping(value = "/createscore", method = {RequestMethod.POST})
+    @ResponseBody
+    public CommonReturnType createScore(@RequestParam(name = "name") String name,
+                                        @RequestParam(name = "score") Integer score) throws BusinessException, ParseException {
+
+        RankModel rankModel = rankService.createScore(name, score);
+
+        return CommonReturnType.create(null);
     }
 
 
