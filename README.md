@@ -9,3 +9,5 @@ Build a score ranking system including frontend and backend.
 ## Testing
 First, use Intellij or Eclipse IDE to open 'scorerank' project, and run it. Then, open the 'score.html' page. Inside the webpage, the 'Refresh' button can load the data from MySQL, and the 'insert new score' button is used to insert a new score into database.
 
+The MySQL script file 'userrank.sql' is also provided.
+
