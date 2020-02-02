@@ -22,6 +22,7 @@ import java.util.Map;
 
 public class BaseController {
 
+    // Common error handler
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

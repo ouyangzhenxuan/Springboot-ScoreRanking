@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="../css/custom.css">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <a class="navbar-brand" href="#" style="color: white">Score Rank</a>
+    <div class="btn-group">
+        <button id="refreshBtn" type="button" class="btn btn-success">Refresh</button>
+<!--        <button id="createBtn" type="button" class="btn btn-primary">new score</button>-->
+    </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+    
+    <div class="container">
+        <div class="shadow p-3 mb-5 bg-white rounded">
+            <table class="table" id="Mytable">
+                <thead>
+                    <tr>
+                        <th scope="col">new</th>
+                        <th scope="col">
+                            <input type="text" class="input-area" placeholder="name" id="new-name">
+                        </th>
+                        <th scope="col">
+                            <input type="text" class="input-area" placeholder="score" id="new-score">
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-primary" id="createBtn">insert new score</button>
+                        </th>
+                    </tr>
+                    <tr class="item">
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Score</th>
+                      <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="rank-container">
+                    
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+    
+</body>
+<script>
+    var g_itemList = [];
+    jQuery(document).ready(function(){
+        $("#refreshBtn").click(function(){
+            $.ajax({
+                type:"GET",
+                url:"http://localhost:8090/rank/score",
+//                xhrFields:{withCredentials:true},
+                
+                success:function(data){
+                    if(data.status == "success"){
+                        g_itemList = data.data;
+                        console.log(data);
+                        reloadDOM();
+                    }
+                },
+            });
+        });
+        $("#createBtn").click(function(){
+            var new_name = document.getElementById("new-name").value;
+            var new_score = document.getElementById("new-score").value;
+            console.log(new_name);
+            console.log(new_score);
+            $.ajax({
+                type:"POST",
+                url:"http://localhost:8090/rank/createscore",
+                data:{
+                    "name": new_name,
+                    "score": new_score,
+                },
+                
+                success:function(data){
+                    if(data.status == "success"){
+                        g_itemList = data.data;
+                        console.log(data);
+                        reloadDOM();
+                    }
+                },
+            });
+            document.getElementById("new-name").value = "";
+            document.getElementById("new-score").value = "";
+        })
+    });
+    function reloadDOM(){
+        var oldItemList = document.getElementById("rank-container");
+        // clear the tbody and insert new ones
+        while(oldItemList.lastElementChild){
+            oldItemList.removeChild(oldItemList.lastElementChild);
+        }
+        for(var i=0; i<g_itemList.length; i++){
+            var itemVO = g_itemList[i];
+            var index = i+1;
+            var dom = "<tr><th scope='row'>"+index+"</th><td>"+
+                itemVO.name+"</td><td>"+itemVO.score+"</td><td>"+
+                itemVO.scoreDate+"</td></tr>";
+            $("#rank-container").append($(dom));
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,12 @@
+.self-container {
+    background-color: aquamarine;
+    height: 100%;
+}
+
+.container{
+    background-color: white;
+}
+
+.input-area{
+    width: 100px;
+}
