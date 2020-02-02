@@ -5,13 +5,13 @@ import com.ouyang.scorerank.error.BusinessException;
 import com.ouyang.scorerank.response.CommonReturnType;
 import com.ouyang.scorerank.service.RankService;
 import com.ouyang.scorerank.service.model.RankModel;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +53,7 @@ public class RankController extends BaseController {
 
         RankModel rankModel = rankService.createScore(name, score);
 
-        return CommonReturnType.create(null);
+        return this.getRankList();
     }
 
 
@@ -62,7 +62,7 @@ public class RankController extends BaseController {
      * */
     @RequestMapping(value = "/localscore", method = {RequestMethod.GET})
     @ResponseBody
-    public CommonReturnType getLocalRankList(){
+    public CommonReturnType getLocalRankList() throws ParseException {
 
         List<RankModel> rankLocalModelList = rankService.listLocalScore();
         List<RankVO> rankLocalVOList = rankLocalModelList.stream().map(rankLocalModel -> {
@@ -83,7 +83,10 @@ public class RankController extends BaseController {
         rankVO.setId(rankModel.getId());
         rankVO.setName(rankModel.getName());
         rankVO.setScore(rankModel.getScore());
-        rankVO.setScoreDate(rankModel.getScoreDate().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = simpleDateFormat.format(rankModel.getScoreDate());
+        rankVO.setScoreDate(date);
 
         return rankVO;
     }

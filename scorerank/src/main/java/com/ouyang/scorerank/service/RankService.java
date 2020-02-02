@@ -9,7 +9,7 @@ import java.util.List;
 public interface RankService {
     List<RankModel> listScore();
 
-    List<RankModel> listLocalScore();
+    List<RankModel> listLocalScore() throws ParseException;
 
     RankModel createScore(String name, Integer score) throws BusinessException, ParseException;
 }

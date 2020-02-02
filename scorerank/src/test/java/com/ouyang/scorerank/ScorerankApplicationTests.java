@@ -1,5 +1,6 @@
 package com.ouyang.scorerank;
 
+import com.ouyang.scorerank.service.model.RankModel;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -24,6 +25,9 @@ class ScorerankApplicationTests {
         Date current = simpleDateFormat.parse(time);
         System.out.println(simpleDateFormat.format(new Date()));
         System.out.println(current);
+        System.out.println(new Date());
+        RankModel rankModel = new RankModel();
+        rankModel.setScoreDate(new Date());
     }
 
 }

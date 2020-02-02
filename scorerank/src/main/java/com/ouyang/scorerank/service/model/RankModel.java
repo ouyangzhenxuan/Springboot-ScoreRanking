@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * @ClassName RankModel
@@ -26,7 +27,7 @@ public class RankModel {
     private Integer score;
 
     @NotNull(message = "The date can't be null")
-    private DateTime scoreDate;
+    private Date scoreDate;
 
     public Integer getId() {
         return id;
@@ -52,11 +53,11 @@ public class RankModel {
         this.score = score;
     }
 
-    public DateTime getScoreDate() {
+    public Date getScoreDate() {
         return scoreDate;
     }
 
-    public void setScoreDate(DateTime scoreDate) {
+    public void setScoreDate(Date scoreDate) {
         this.scoreDate = scoreDate;
     }
 }

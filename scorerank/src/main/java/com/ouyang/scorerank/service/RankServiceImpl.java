@@ -55,10 +55,11 @@ public class RankServiceImpl implements RankService {
     }
 
     @Override
-    public List<RankModel> listLocalScore() {
+    public List<RankModel> listLocalScore() throws ParseException {
         // create 5 local model for testing, no need to connect database
         RankModel rankModel;
-        DateTime dateTime = DateTime.now();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         List<RankModel> rankModelList = new ArrayList<>();
         Random random = new Random();
         for(int i=0; i<10; i++){
@@ -66,7 +67,7 @@ public class RankServiceImpl implements RankService {
             rankModel.setId(i);
             rankModel.setName("model" + i);
             rankModel.setScore(random.nextInt(100-10)+10);
-            rankModel.setScoreDate(dateTime);
+            rankModel.setScoreDate(new Date());
             rankModelList.add(rankModel);
         }
         Collections.sort(rankModelList, new Comparator<RankModel>() {
@@ -86,16 +87,10 @@ public class RankServiceImpl implements RankService {
     @Transactional
     public RankModel createScore(String name, Integer score) throws BusinessException, ParseException {
         RankModel rankModel = new RankModel();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-mm-DD HH:mm:ss");
-        Date date = simpleDateFormat.parse(simpleDateFormat.format(new Date()));
-
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY-mm-DD HH:mm:ss");
-        DateTime today = dateTimeFormatter.parseDateTime(simpleDateFormat.format(new Date()));
 
         rankModel.setName(name);
         rankModel.setScore(score);
-        rankModel.setScoreDate(today);
+        rankModel.setScoreDate(new Date());
 
         RankDO rankDO = this.convertFromRankModel(rankModel);
         // insert into database
@@ -120,7 +115,9 @@ public class RankServiceImpl implements RankService {
         }
         RankModel rankModel = new RankModel();
         BeanUtils.copyProperties(rankDO, rankModel);
-        rankModel.setScoreDate(new DateTime(rankDO.getScoreDate()));
+//        rankModel.setScoreDate(new DateTime(rankDO.getScoreDate()));
+        rankModel.setScoreDate(rankDO.getScoreDate());
+
         return rankModel;
     }
 }
