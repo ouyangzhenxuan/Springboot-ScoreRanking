@@ -46,7 +46,24 @@
                     </tr>
                 </thead>
                 <tbody id="rank-container">
-                    
+                    <tr>
+                        <th scope="col">1</th>
+                        <th scope="col">John</th>
+                        <th scope="col">99</th>
+                        <th scope="col">2019-06-03 15:23:22</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">2</th>
+                        <th scope="col">Cathy</th>
+                        <th scope="col">93</th>
+                        <th scope="col">2019-06-03 15:23:22</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">3</th>
+                        <th scope="col">Coyle</th>
+                        <th scope="col">86</th>
+                        <th scope="col">2019-06-03 15:23:22</th>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -70,6 +87,9 @@
                         reloadDOM();
                     }
                 },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Network fail, server is not opening");
+                }
             });
         });
         $("#createBtn").click(function(){
@@ -92,6 +112,9 @@
                         reloadDOM();
                     }
                 },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Network fail, server is not opening");
+                }
             });
             document.getElementById("new-name").value = "";
             document.getElementById("new-score").value = "";
